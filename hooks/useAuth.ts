@@ -21,6 +21,7 @@ interface UserData {
   email: string;
   createdAt: string;
   lastLogin: string;
+  avatar?: string;
 }
 
 export const useAuth = () => {
@@ -32,10 +33,14 @@ export const useAuth = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        // Fetch additional user data from Firestore
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           setUserData(userDoc.data() as UserData);
+          // Update last login time
+          await setDoc(doc(db, 'users', user.uid), {
+            ...userDoc.data(),
+            lastLogin: new Date().toISOString()
+          }, { merge: true });
         }
       } else {
         setUser(null);
@@ -52,13 +57,19 @@ export const useAuth = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
-      // Get user role from Firestore
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (!userDoc.exists()) {
         throw new Error('User data not found');
       }
       
       const userData = userDoc.data() as UserData;
+      
+      // Update last login
+      await setDoc(doc(db, 'users', user.uid), {
+        ...userData,
+        lastLogin: new Date().toISOString()
+      }, { merge: true });
+      
       setUserData(userData);
       
       return { user, userData };
@@ -89,7 +100,6 @@ export const useAuth = () => {
         lastLogin: new Date().toISOString()
       };
 
-      // Save additional user data in Firestore
       await setDoc(doc(db, 'users', userCredential.user.uid), userData);
       setUserData(userData);
       

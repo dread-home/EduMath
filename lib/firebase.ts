@@ -1,25 +1,22 @@
-// Firebase configuration and initialization
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  // TODO: Add your Firebase config here
-  apiKey: "your-api-key",
-  authDomain: "your-auth-domain",
-  projectId: "your-project-id",
-  storageBucket: "your-storage-bucket",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-app-id"
+  apiKey: "AIzaSyBfN0ci74w2zpeFcglQMSSvgKZ-zq2VK0w",
+  authDomain: "edumathghana-817d5.firebaseapp.com",
+  projectId: "edumathghana-817d5",
+  storageBucket: "edumathghana-817d5.firebasestorage.app",
+  messagingSenderId: "602430791823",
+  appId: "1:602430791823:web:b2b2122fd43ec646b2d0fa",
+  measurementId: "G-2TJ8FNDQS6"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
-
-// Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 export default app;
